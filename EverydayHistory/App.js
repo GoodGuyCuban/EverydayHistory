@@ -67,11 +67,11 @@ export default function App() {
     const elements = [];
     while (i < words.length) {
       let found = false;
-      for (let j = Math.min(i + 3, words.length); j > i; j--) {
+      for (let j = Math.min(i + 4, words.length); j > i; j--) {
         const phrase = words
           .slice(i, j)
           .join("_")
-          .replace(/[^a-zA-Z0-9_-]/g, "");
+          .replace(/[^a-zA-Z0-9_–-]/g, "");
 
         const page = pages.find((page) => page.title === phrase);
         if (page) {
