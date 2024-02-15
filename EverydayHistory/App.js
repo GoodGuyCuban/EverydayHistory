@@ -71,7 +71,7 @@ export default function App() {
         const phrase = words
           .slice(i, j)
           .join("_")
-          .replace(/[^a-zA-Z0-9_–-]/g, "");
+          .replace(/[^a-zA-Z0-9_–'-]/g, "");
 
         const page = pages.find((page) => page.title === phrase);
         if (page) {
@@ -108,6 +108,9 @@ export default function App() {
         </Text>
 
         <FlatList
+          contentContainerStyle={{
+            padding: 20,
+          }}
           data={eventsList}
           renderItem={({ item }) => (
             <View style={styles.item}>
@@ -139,8 +142,11 @@ const styles = StyleSheet.create({
   },
   item: {
     padding: 10,
+    margin: 10,
     fontSize: 18,
-    height: 44,
+    width: "50%",
+    border: "1px solid black",
+    borderRadius: 5,
   },
   itemHeader: {
     fontSize: 18,
