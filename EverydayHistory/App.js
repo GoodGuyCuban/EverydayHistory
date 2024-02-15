@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   Linking,
+  SafeAreaView,
 } from "react-native";
 import API from "./API";
 
@@ -99,29 +100,31 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.titleText}>Everyday History</Text>
-
+    <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <Text style={styles.headingText}>
-          On {day} of {monthWord} these events happened:
-        </Text>
+        <Text style={styles.titleText}>Everyday History</Text>
 
-        <FlatList
-          contentContainerStyle={{
-            padding: 20,
-          }}
-          data={eventsList}
-          renderItem={({ item }) => (
-            <View style={styles.item}>
-              <Text style={styles.itemHeader}>{item.year}:</Text>
-              {renderTextWithLinks(item.text, item.pages)}
-            </View>
-          )}
-        />
+        <View style={styles.container}>
+          <Text style={styles.headingText}>
+            On {day} of {monthWord} these events happened:
+          </Text>
+
+          <FlatList
+            contentContainerStyle={{
+              padding: 20,
+            }}
+            data={eventsList}
+            renderItem={({ item }) => (
+              <View style={styles.item}>
+                <Text style={styles.itemHeader}>{item.year}:</Text>
+                {renderTextWithLinks(item.text, item.pages)}
+              </View>
+            )}
+          />
+        </View>
+        <StatusBar style="auto" />
       </View>
-      <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -144,8 +147,8 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     fontSize: 18,
-    width: "50%",
-    border: "1px solid black",
+    borderColor: "black",
+    borderWidth: 1,
     borderRadius: 5,
   },
   itemHeader: {
