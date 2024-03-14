@@ -1,3 +1,4 @@
+// Import necessary modules from react, react-native and expo-status-bar
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -9,15 +10,19 @@ import {
   Linking,
   SafeAreaView,
   Image,
+  Apperance,
+  useColorScheme,
 } from "react-native";
-import API from "./API";
+import API from "./API"; // Import API configuration
 
+// Get today's date and format it
 let today = new Date();
 let month = String(today.getMonth() + 1).padStart(2, "0");
 let day = String(today.getDate()).padStart(2, "0");
 let monthWord = today.toLocaleString("default", { month: "long" });
 let url = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/all/${month}/${day}`;
 
+// Function to fetch events from the API
 async function fetchEvents(url, API) {
   let events = await fetch(url, {
     headers: {
@@ -31,13 +36,14 @@ async function fetchEvents(url, API) {
     return response.json();
   });
 
-  console.log(events);
   return events;
 }
 
+// Main App component
 export default function App() {
-  const [eventsList, setEventsList] = useState([]);
+  const [eventsList, setEventsList] = useState([]); // State to hold the list of events
 
+  // Fetch events on component mount
   useEffect(() => {
     fetchEvents(url, API).then((events) => {
       let eventsList = [];
@@ -49,10 +55,11 @@ export default function App() {
         });
       });
 
-      setEventsList(eventsList);
+      setEventsList(eventsList); // Update the state with the fetched events
     });
   }, []);
 
+  // Function to handle link press
   const handlePress = async (url) => {
     const supported = await Linking.canOpenURL(url);
 
@@ -63,6 +70,7 @@ export default function App() {
     }
   };
 
+  // Function to render text with links
   const renderTextWithLinks = (text, pages) => {
     const words = text.split(" ");
     let i = 0;
@@ -102,9 +110,10 @@ export default function App() {
       }
     }
 
-    return <Text>{elements}</Text>;
+    return <Text style={styles.baseText}>{elements}</Text>;
   };
 
+  // Function to render image
   const renderImage = (pages, text) => {
     let pageWithThumbnail;
     if (text.match(/\bwar(s)?\b[:]?/gi)) {
@@ -126,6 +135,7 @@ export default function App() {
     return null;
   };
 
+  // Function to get day with suffix
   const getDayWithSuffix = (day) => {
     if (day % 10 === 1 && day !== 11) {
       return `${day}st`;
@@ -138,6 +148,12 @@ export default function App() {
     }
   };
 
+  // Get the color scheme for the device
+  const colorScheme = useColorScheme();
+  console.log(colorScheme);
+  const styles = colorScheme === "dark" ? darkStyles : lightStyles;
+
+  // Render the App component
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topBar}>
@@ -148,7 +164,6 @@ export default function App() {
       </View>
       <View style={styles.container}>
         <FlatList
-          bounces={false}
           contentContainerStyle={{
             padding: 20,
           }}
@@ -167,20 +182,17 @@ export default function App() {
   );
 }
 
-const styles = StyleSheet.create({
+// Base styles
+const baseStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "stretch",
     justifyContent: "center",
     width: "100%",
   },
   topBar: {
-    backgroundColor: "white",
     alignItems: "center",
     width: "100%",
-    borderBottomColor: "black",
-    borderBottomWidth: 1,
   },
   titleText: {
     fontSize: 20,
@@ -212,5 +224,67 @@ const styles = StyleSheet.create({
     height: 200,
     alignSelf: "center",
     margin: 10,
+  },
+  baseText: {
+    fontSize: 14,
+  },
+});
+
+// Light styles
+const lightStyles = StyleSheet.create({
+  ...baseStyles,
+  container: {
+    ...baseStyles.container,
+    backgroundColor: "#fff",
+  },
+  topBar: {
+    ...baseStyles.topBar,
+    backgroundColor: "white",
+    borderBottomColor: "black",
+    borderBottomWidth: 1,
+  },
+});
+
+// Dark styles
+const darkStyles = StyleSheet.create({
+  ...baseStyles,
+  container: {
+    ...baseStyles.container,
+    backgroundColor: "#121212",
+  },
+  topBar: {
+    ...baseStyles.topBar,
+    backgroundColor: "#121212",
+    borderBottomColor: "white",
+    borderBottomWidth: 1,
+  },
+  titleText: {
+    ...baseStyles.titleText,
+    color: "white",
+  },
+  headingText: {
+    ...baseStyles.headingText,
+    color: "white",
+  },
+  item: {
+    ...baseStyles.item,
+    backgroundColor: "#121212",
+    borderColor: "white",
+  },
+  itemHeader: {
+    ...baseStyles.itemHeader,
+    color: "white",
+  },
+  linkText: {
+    ...baseStyles.linkText,
+    color: "lightblue",
+  },
+  Image: {
+    ...baseStyles.Image,
+    borderColor: "white",
+  },
+  baseText: {
+    ...baseStyles.baseText,
+    color: "white",
   },
 });
